@@ -3,15 +3,13 @@ package ro.sda.hypermarket.core.dao;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.query.Query;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ro.sda.hypermarket.core.entity.Supplier;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -27,9 +25,11 @@ public class SupplierDAOImpl implements SupplierDAO {
 
     @Override
     public Supplier createSupplier(Supplier supplier) {
+        sessionFactory.getCurrentSession().beginTransaction();
         getCurrentSession().save(supplier);
+        sessionFactory.getCurrentSession().flush();
+        sessionFactory.getCurrentSession().getTransaction().commit();
         return supplier;
-
     }
 
     @Override
