@@ -30,7 +30,7 @@ public class DepartmentDaoTest {
     }
 
     @Test
-    public void getDepartmentById() {
+    public void getDepartmentByIdTest() {
         Department department = new Department();
         Department department1 = departmentDAO.getDepartmentById(1L);
         Assert.assertEquals("Sales", department1.getName());

@@ -5,7 +5,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import ro.sda.hypermarket.core.entity.Supplier;
+import ro.sda.hypermarket.core.entity.Employee;
 
 import javax.persistence.criteria.CriteriaQuery;
 import javax.transaction.Transactional;
@@ -13,7 +13,7 @@ import java.util.List;
 
 @Repository
 @Transactional
-public class SupplierDAOImpl implements SupplierDAO {
+public class EmployeeDAOImpl implements EmployeeDao{
 
     @Autowired
     private SessionFactory sessionFactory;
@@ -23,49 +23,49 @@ public class SupplierDAOImpl implements SupplierDAO {
     }
 
     @Override
-    public Supplier createSupplier(Supplier supplier) {
+    public Employee createEmployee(Employee employee) {
         sessionFactory.getCurrentSession().beginTransaction();
-        getCurrentSession().save(supplier);
+        getCurrentSession().save(employee);
         sessionFactory.getCurrentSession().flush();
         sessionFactory.getCurrentSession().getTransaction().commit();
-        return supplier;
+        return employee;
     }
 
     @Override
-    public Supplier getSupplierById(Long id) {
-        return getCurrentSession().load(Supplier.class, id);
+    public Employee getEmployeeById(Long id) {
+        return getCurrentSession().load(Employee.class, id);
 
     }
 
     @Override
-    public List<Supplier> getAll() {
+    public List<Employee> getAll() {
         Session session = sessionFactory.openSession();
-        CriteriaQuery<Supplier> criteriaQuery = session.getCriteriaBuilder().createQuery(Supplier.class);
-        criteriaQuery.from(Supplier.class);
+        CriteriaQuery<Employee> criteriaQuery = session.getCriteriaBuilder().createQuery(Employee.class);
+        criteriaQuery.from(Employee.class);
 
-        List<Supplier> suppliers = session.createQuery(criteriaQuery).getResultList();
+        List<Employee> employees = session.createQuery(criteriaQuery).getResultList();
         session.close();
 
-        return suppliers;
+        return employees;
 
     }
 
     @Override
-    public Supplier updateSupplier(Supplier supplier) {
+    public Employee updateEmployee(Employee employee) {
         Transaction tr = sessionFactory.getCurrentSession().beginTransaction();
-        Supplier supplier1 = getSupplierById(supplier.getId());
-        sessionFactory.getCurrentSession().merge(supplier1);
+        Employee employee1 = getEmployeeById(employee.getId());
+        sessionFactory.getCurrentSession().merge(employee1);
         sessionFactory.getCurrentSession().flush();
         tr.commit();
-        return supplier;
+        return employee;
 
     }
 
     @Override
-    public void deleteSupplier(Supplier supplier) {
+    public void deleteEmployee(Employee employee) {
         Transaction tr = sessionFactory.getCurrentSession().beginTransaction();
-        Supplier supplier1 = getSupplierById(supplier.getId());
-        sessionFactory.getCurrentSession().delete(supplier1);
+        Employee employee1 = getEmployeeById(employee.getId());
+        sessionFactory.getCurrentSession().delete(employee1);
         sessionFactory.getCurrentSession().flush();
         tr.commit();
     }
