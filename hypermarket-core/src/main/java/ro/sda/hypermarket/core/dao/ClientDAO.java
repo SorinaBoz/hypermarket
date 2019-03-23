@@ -10,6 +10,8 @@ public interface ClientDAO {
 
     Client getClientById(Long id);
 
+    Client getClientByName(String name);
+
     List<Client> getAll();
 
     Client updateClient(Client client);

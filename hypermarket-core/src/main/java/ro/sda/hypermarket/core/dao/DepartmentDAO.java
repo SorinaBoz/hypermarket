@@ -10,6 +10,8 @@ public interface DepartmentDAO {
 
     Department getDepartmentById(Long id);
 
+    Department getDepartmentByName(String name);
+
     List<Department> getAll();
 
     Department updateDepartment(Department department);

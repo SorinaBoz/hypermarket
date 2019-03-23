@@ -3,6 +3,7 @@ package ro.sda.hypermarket.core.dao;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ro.sda.hypermarket.core.entity.Employee;
@@ -34,7 +35,15 @@ public class EmployeeDAOImpl implements EmployeeDao{
     @Override
     public Employee getEmployeeById(Long id) {
         return getCurrentSession().load(Employee.class, id);
+    }
 
+    @Override
+    public Employee getEmployeeByName(String name) {
+        Query query = sessionFactory.getCurrentSession().
+                createQuery("FROM Employee WHERE name=:name");
+        query.setParameter("name", name);
+        Employee employee = (Employee) query.uniqueResult();
+        return employee;
     }
 
     @Override

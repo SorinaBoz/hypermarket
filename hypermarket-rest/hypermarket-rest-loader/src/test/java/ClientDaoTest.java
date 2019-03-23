@@ -24,40 +24,49 @@ public class ClientDaoTest {
         Client client = new Client();
         client.setName("Irina Mihai");
         clientDAO.createClient(client);
-        List<Client> clients = clientDAO.getAll();
-        Assert.assertEquals("Irina Mihai", client.getName());
+        Client actualClient = clientDAO.getClientByName("Irina Mihai");
+        Client expectedClient = client;
+        Assert.assertEquals(expectedClient, actualClient);
     }
 
     @Test
     public void getClientByIdTest() {
-        Client client = new Client();
-        Client client1 = clientDAO.getClientById(67L);
-        Assert.assertEquals("Irina Mihai", client1.getName());
+        Client expectedClient = clientDAO.getClientById(71L);
+        List<Client> clients = clientDAO.getAll();
+        Assert.assertEquals(expectedClient, clients.get(0));
+    }
+
+    @Test
+    public void getClientByNameTest(){
+        Client actualClient = clientDAO.getClientById(71L);
+        Client expectedClient = clientDAO.getClientByName("Madalina Georgiana");
+        Assert.assertEquals(expectedClient, actualClient);
     }
 
     @Test
     public void updateClientTest(){
 
-        Client client = clientDAO.getClientById(65L);
-        client.setName("Maria Lupu");
+        Client client = clientDAO.getClientById(72L);
+        client.setName("Lucretia Micu");
         clientDAO.updateClient(client);
-        List<Client> clients = clientDAO.getAll();
-        Assert.assertEquals("Maria Lupu", clients.get(0).getName());
+        Client actualClient = clientDAO.getClientByName("Lucretia Micu");
+        Client expectedClient = client;
+        Assert.assertEquals(expectedClient, actualClient);
     }
 
-    @Test
-    public void deleteClientTest(){
-        Client client = clientDAO.getClientById(67L);
-        clientDAO.deleteClient(client);
-        List<Client> clients = clientDAO.getAll();
-        Assert.assertTrue(clients.isEmpty());
-    }
+//    @Test
+//    public void deleteClientTest(){
+//        Client client = clientDAO.getClientById(67L);
+//        clientDAO.deleteClient(client);
+//        List<Client> clients = clientDAO.getAll();
+//        Assert.assertTrue(clients.isEmpty());
+//    }
 
     @Test
     public void deleteClientTest1(){
         List<Client> clients = clientDAO.getAll();
         int size = clients.size();
-        Client client = clientDAO.getClientById(68L);
+        Client client = clientDAO.getClientById(75L);
         clientDAO.deleteClient(client);
         clients = clientDAO.getAll();
         Assert.assertEquals(size - 1, clients.size());
@@ -74,7 +83,7 @@ public class ClientDaoTest {
         client1.setName("Mardare Cristina");
         clientDAO.createClient(client1);
 
-        List<Client> clients = clientDAO.getAll();
-        Assert.assertEquals(2, clients.size());
+        List<Client> actualClients = clientDAO.getAll();
+        Assert.assertEquals(8, actualClients.size());
     }
 }

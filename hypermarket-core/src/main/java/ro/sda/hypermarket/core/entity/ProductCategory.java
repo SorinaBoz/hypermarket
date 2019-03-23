@@ -2,7 +2,6 @@ package ro.sda.hypermarket.core.entity;
 
 import javax.persistence.*;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 @Table(name = "product_category", schema = "hypermarket")
@@ -16,7 +15,7 @@ public class ProductCategory {
 
     @OneToOne
     @JoinColumn(name="manager_id")
-    private Employee managerId;
+    private Employee manager;
 
     public Long getId() {
         return id;
@@ -34,12 +33,12 @@ public class ProductCategory {
         this.name = name;
     }
 
-    public Employee getManagerId() {
-        return managerId;
+    public Employee getManager() {
+        return manager;
     }
 
-    public void setManagerId(Employee managerId) {
-        this.managerId = managerId;
+    public void setManager(Employee manager) {
+        this.manager = manager;
     }
 
     @Override
@@ -49,20 +48,20 @@ public class ProductCategory {
         ProductCategory that = (ProductCategory) o;
         return getId().equals(that.getId()) &&
                 getName().equals(that.getName()) &&
-                getManagerId().equals(that.getManagerId());
+                getManager().equals(that.getManager());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getManagerId());
+        return Objects.hash(getId(), getName(), getManager());
     }
 
     @Override
     public String toString() {
-        return "ProductCategory{" +
+        return "ProductCategoryDAO{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", managerId=" + managerId +
+                ", manager=" + manager +
                 '}';
     }
 }

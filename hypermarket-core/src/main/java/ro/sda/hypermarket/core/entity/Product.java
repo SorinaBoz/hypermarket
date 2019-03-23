@@ -104,19 +104,16 @@ public class Product {
         if (this == o) return true;
         if (!(o instanceof Product)) return false;
         Product product = (Product) o;
-        return Objects.equals(getId(), product.getId()) &&
-                Objects.equals(getName(), product.getName()) &&
-                Objects.equals(getSupplierPrice(), product.getSupplierPrice()) &&
-                Objects.equals(getStock(), product.getStock()) &&
-                Objects.equals(getSupplier(), product.getSupplier()) &&
-                Objects.equals(getProductCategory(), product.getProductCategory()) &&
-                Objects.equals(getVendingPrice(), product.getVendingPrice()) &&
-                Objects.equals(getSaleProductSet(), product.getSaleProductSet());
+        return getId().equals(product.getId()) &&
+                getName().equals(product.getName()) &&
+                getSupplierPrice().equals(product.getSupplierPrice()) &&
+                getStock().equals(product.getStock()) &&
+                getVendingPrice().equals(product.getVendingPrice());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getSupplierPrice(), getStock(), getSupplier(), getProductCategory(), getVendingPrice(), getSaleProductSet());
+        return Objects.hash(getId(), getName(), getSupplierPrice(), getStock(), getVendingPrice());
     }
 
     @Override

@@ -10,6 +10,8 @@ public interface ProductDAO {
 
     Product getProductById(Long id);
 
+    Product getProductByName(String name);
+
     List<Product> getAll();
 
     Product updateProduct(Product product);

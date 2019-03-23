@@ -10,6 +10,8 @@ public interface EmployeeDao {
 
     Employee getEmployeeById(Long id);
 
+    Employee getEmployeeByName(String name);
+
     List<Employee> getAll();
 
     Employee updateEmployee (Employee employee);

@@ -24,10 +24,10 @@ public class SupplierDAOImpl implements SupplierDAO {
 
     @Override
     public Supplier createSupplier(Supplier supplier) {
-        sessionFactory.getCurrentSession().beginTransaction();
+//        sessionFactory.getCurrentSession().beginTransaction();
         getCurrentSession().save(supplier);
-        sessionFactory.getCurrentSession().flush();
-        sessionFactory.getCurrentSession().getTransaction().commit();
+//        sessionFactory.getCurrentSession().flush();
+//        sessionFactory.getCurrentSession().getTransaction().commit();
         return supplier;
     }
 

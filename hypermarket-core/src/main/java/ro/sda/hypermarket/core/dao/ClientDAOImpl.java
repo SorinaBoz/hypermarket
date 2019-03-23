@@ -3,6 +3,7 @@ package ro.sda.hypermarket.core.dao;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +35,15 @@ public class ClientDAOImpl implements ClientDAO {
     @Override
     public Client getClientById(Long id) {
         return getCurrentSession().load(Client.class, id);
+    }
+
+    @Override
+    public Client getClientByName(String name) {
+        Query query = sessionFactory.getCurrentSession().
+                createQuery("FROM Client WHERE name=:name");
+        query.setParameter("name", name);
+        Client client = (Client) query.uniqueResult();
+        return client;
     }
 
     @Override

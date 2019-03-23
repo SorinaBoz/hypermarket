@@ -3,6 +3,7 @@ package ro.sda.hypermarket.core.dao;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +35,15 @@ public class DepartmentDAOImpl implements DepartmentDAO {
     @Override
     public Department getDepartmentById(Long id) {
         return getCurrentSession().load(Department.class, id);
+    }
+
+    @Override
+    public Department getDepartmentByName(String name) {
+        Query query = sessionFactory.getCurrentSession().
+                createQuery("FROM Department WHERE name=:name");
+        query.setParameter("name", name);
+        Department department = (Department) query.uniqueResult();
+        return department;
     }
 
     @Override

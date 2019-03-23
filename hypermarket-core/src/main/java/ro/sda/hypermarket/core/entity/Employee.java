@@ -10,17 +10,17 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "first_name", nullable = false)
-    private String firstName;
-
-    @Column(name = "last_name", nullable = false)
-    private String lastName;
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @Column(name = "salary", nullable = false)
     private Double salary;
 
     @Column(name = "job_title", nullable = false)
     private String jobTitle;
+
+    @Column(name = "city", nullable = true)
+    private String city;
 
     @ManyToOne
     @JoinColumn(name = "dept_id")
@@ -30,9 +30,6 @@ public class Employee {
     @JoinColumn(name = "manager_id")
     private Employee manager;
 
-    @Column(name = "city", nullable = true)
-    private String city;
-
     public Long getId() {
         return id;
     }
@@ -41,20 +38,12 @@ public class Employee {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Double getSalary() {
@@ -103,26 +92,23 @@ public class Employee {
         if (!(o instanceof Employee)) return false;
         Employee employee = (Employee) o;
         return getId().equals(employee.getId()) &&
-                getFirstName().equals(employee.getFirstName()) &&
-                getLastName().equals(employee.getLastName()) &&
+                getName().equals(employee.getName()) &&
                 getSalary().equals(employee.getSalary()) &&
                 getJobTitle().equals(employee.getJobTitle()) &&
-                getDepartment().equals(employee.getDepartment()) &&
-                getManager().equals(employee.getManager()) &&
-                getCity().equals(employee.getCity());
+                getCity().equals(employee.getCity()) &&
+                Objects.equals(getManager(), employee.getManager());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getFirstName(), getLastName(), getSalary(), getJobTitle(), getDepartment(), getManager(), getCity());
+        return Objects.hash(getId(), getName(), getSalary(), getJobTitle(), getCity(), getManager());
     }
 
     @Override
     public String toString() {
         return "Employee{" +
                 "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
+                ", name='" + name + '\'' +
                 ", salary=" + salary +
                 ", jobTitle='" + jobTitle + '\'' +
                 ", department=" + department +
