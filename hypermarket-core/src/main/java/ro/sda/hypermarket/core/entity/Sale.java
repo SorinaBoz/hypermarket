@@ -1,5 +1,7 @@
 package ro.sda.hypermarket.core.entity;
 
+import ro.sda.hypermarket.core.base.BaseEntity;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -7,10 +9,7 @@ import java.util.Set;
 
 @Entity
 @Table(name="sales", schema = "hypermaket")
-public class Sale {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class Sale extends BaseEntity {
 
     @Column(name="number", length = 15, nullable = false)
     private String number;
@@ -35,14 +34,6 @@ public class Sale {
 
     public void setSalesSet(Set<SaleProduct> salesSet) {
         this.salesSet = salesSet;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getNumber() {
@@ -82,7 +73,7 @@ public class Sale {
         if (this == o) return true;
         if (!(o instanceof Sale)) return false;
         Sale sale = (Sale) o;
-        return Objects.equals(getId(), sale.getId()) &&
+        return Objects.equals(super.getId(), sale.getId()) &&
                 Objects.equals(getNumber(), sale.getNumber()) &&
                 Objects.equals(getDate(), sale.getDate()) &&
                 Objects.equals(getClientId(), sale.getClientId()) &&
@@ -98,7 +89,7 @@ public class Sale {
     @Override
     public String toString() {
         return "Sale{" +
-                "id=" + id +
+                "id=" + getId() +
                 ", number='" + number + '\'' +
                 ", date=" + date +
                 ", clientId=" + clientId +

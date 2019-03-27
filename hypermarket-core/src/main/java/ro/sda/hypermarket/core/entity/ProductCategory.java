@@ -1,14 +1,13 @@
 package ro.sda.hypermarket.core.entity;
 
+import ro.sda.hypermarket.core.base.BaseEntity;
+
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "product_category", schema = "hypermarket")
-public class ProductCategory {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@Table(name = "products_categories", schema = "hypermarket")
+public class ProductCategory extends BaseEntity {
 
     @Column(name = "name", length = 50, nullable = false)
     private String name;
@@ -16,14 +15,6 @@ public class ProductCategory {
     @OneToOne
     @JoinColumn(name="manager_id")
     private Employee manager;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -46,7 +37,7 @@ public class ProductCategory {
         if (this == o) return true;
         if (!(o instanceof ProductCategory)) return false;
         ProductCategory that = (ProductCategory) o;
-        return getId().equals(that.getId()) &&
+        return super.getId() == (that.getId()) &&
                 getName().equals(that.getName()) &&
                 getManager().equals(that.getManager());
     }
@@ -59,7 +50,7 @@ public class ProductCategory {
     @Override
     public String toString() {
         return "ProductCategoryDAO{" +
-                "id=" + id +
+                "id=" + getId() +
                 ", name='" + name + '\'' +
                 ", manager=" + manager +
                 '}';

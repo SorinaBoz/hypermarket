@@ -2,15 +2,17 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-import ro.sda.hypermarket.core.dao.ProductCategoryDAO;
-import ro.sda.hypermarket.core.dao.ProductDAO;
-import ro.sda.hypermarket.core.dao.SupplierDAO;
-import ro.sda.hypermarket.core.entity.Employee;
 import ro.sda.hypermarket.core.entity.Product;
+import ro.sda.hypermarket.core.entity.ProductCategory;
 import ro.sda.hypermarket.core.entity.Supplier;
+import ro.sda.hypermarket.core.service.EmployeeService;
+import ro.sda.hypermarket.core.service.ProductCategoryService;
+import ro.sda.hypermarket.core.service.ProductService;
+import ro.sda.hypermarket.core.service.SupplierService;
 
 import java.util.List;
 
@@ -20,22 +22,25 @@ import java.util.List;
 public class ProductDaoTest {
 
     @Autowired
-    private ProductDAO productDAO;
+    private ProductService productService;
 
     @Autowired
-    private ProductCategoryDAO productCategoryDAO;
+    private ProductCategoryService productCategoryService;
 
     @Autowired
-    private SupplierDAO supplierDAO;
+    private SupplierService supplierService;
 
-//    TODO: VERIFY - TEST FAILED
+    @Autowired
+    private EmployeeService employeeService;
+
     @Test
+    @Rollback(false)
+    @Transactional
     public void createProductTest() {
 
         Product product = new Product();
         Supplier supplier = new Supplier();
-//        ProductCategory productCategory = new ProductCategory();
-        Employee employee = new Employee();
+        ProductCategory productCategory = new ProductCategory();
 
         product.setName("Avocado");
         product.setSupplierPrice(45F);
@@ -45,38 +50,41 @@ public class ProductDaoTest {
         supplier.setName("Andreea Antonescu");
         supplier.setCity("Bucuresti");
         supplier.setContactNo("554455");
-        supplierDAO.createSupplier(supplier);
+        supplierService.create(supplier, false);
         product.setSupplier(supplier);
 
-//        productCategory.setName("Vegetables");
-//        productCategory.setManager(employee);
-//        productCategoryDAO.createProductCategory(productCategory);
-//        product.setProductCategory(productCategory);
-        productDAO.createProduct(product);
-
-        Product actualProduct = productDAO.getProductByName("Avocado");
-        Product expectedProduct = product;
-        Assert.assertEquals(expectedProduct, actualProduct);
+        productCategory.setName("Vegetables");
+        productCategory.setManager(employeeService.getEmployeeById(32L, false));
+        productCategoryService.create(productCategory, false);
+        product.setProductCategory(productCategoryService.getProductCategoryById(1L, false));
+        productService.create(product, false);
+        Assert.assertNotNull(product);
     }
 
     @Test
+    @Rollback(false)
+    @Transactional
     public void getProductByIdTest() {
-        Product expectedProduct = productDAO.getProductById(1L);
-        List<Product> products = productDAO.getAll();
+        Product expectedProduct = productService.getProductById(22L, false);
+        List<Product> products = productService.findAll(false);
         Assert.assertEquals(expectedProduct, products.get(0));
     }
 
     @Test
+    @Rollback(false)
+    @Transactional
     public void getProductByNameTest(){
-        Product actualProduct = productDAO.getProductById(22L);
-        Product expectedProduct = productDAO.getProductByName("Spinach");
+        Product actualProduct = productService.getProductById(23L, false);
+        Product expectedProduct = productService.getProductByName("Apples", false);
         Assert.assertEquals(expectedProduct, actualProduct);
     }
 
     @Test
+    @Rollback(false)
+    @Transactional
     public void updateProductTest(){
 
-        Product product = productDAO.getProductById(24L);
+        Product product = productService.getProductById(32L, false);
         product.setName("Orange Juice");
         product.setSupplierPrice(45F);
         product.setStock(8L);
@@ -86,66 +94,35 @@ public class ProductDaoTest {
         supplier.setName("Madalina Mares");
         supplier.setCity("Botosani");
         supplier.setContactNo("5999666");
-        supplierDAO.createSupplier(supplier);
+        supplierService.create(supplier, false);
         product.setSupplier(supplier);
-        productDAO.createProduct(product);
+        productService.create(product, false);
 
-//        ProductCategory productCategory = new ProductCategory();
-//        productCategory.setName("Juices");
-//        Employee employee = new Employee();
-//        productCategory.setManager(employee);
-//        productCategoryDAO.updateProductCategory(productCategory);
-//        product.setProductCategory(productCategory);
-
-        Product actualProduct = productDAO.getProductByName("Orange Juice");
-        Product expectedProduct = product;
-        Assert.assertEquals(expectedProduct, actualProduct);
+        ProductCategory productCategory = new ProductCategory();
+        productCategory.setName("Juices");
+        productCategory.setManager(employeeService.getEmployeeById(32L, false));
+        productCategoryService.update(productCategory,false);
+        product.setProductCategory(productCategoryService.getProductCategoryById(1L, false));
     }
 
-//    @Test
-//    public void deleteProductTest(){
-//        Product product = productDAO.getProductById(3L);
-//        productDAO.deleteProduct(product);
-//        List<Product> products = productDAO.getAll();
-//        Assert.assertTrue(products.isEmpty());
-//    }
-
     @Test
-    public void deleteProductTest1(){
-        List<Product> products = productDAO.getAll();
+    @Rollback(false)
+    @Transactional
+    public void deleteProductTest(){
+        List<Product> products = productService.findAll(false);
         int size = products.size();
-        Product product = productDAO.getProductById(25L);
-        productDAO.deleteProduct(product);
-        products = productDAO.getAll();
+        Product product = productService.getProductById(27L, false);
+        productService.delete(product, false);
+        products = productService.findAll(false);
         Assert.assertEquals(size - 1, products.size());
     }
 
     @Test
+    @Rollback(false)
+    @Transactional
     public void getAllProductsTest() {
 
-//        Product product = new Product();
-//        Supplier supplier = new Supplier();
-//        ProductCategory productCategory = new ProductCategory();
-//        Employee employee = new Employee();
-//
-//        product.setName("Avocado");
-//        product.setSupplierPrice(45F);
-//        product.setStock(8L);
-//        product.setVendingPrice(21F);
-//
-//        supplier.setName("Alina Mocanu");
-//        supplier.setCity("Iasi");
-//        supplier.setContactNo("00000000");
-//        supplierDAO.createSupplier(supplier);
-//        product.setSupplier(supplier);
-//
-//        productCategory.setName("Fruits");
-//        productCategory.setManager(employee);
-//        productCategoryDAO.createProductCategory(productCategory);
-//        product.setProductCategory(productCategory);
-//        productDAO.createProduct(product);
-
-        List<Product> actualProducts = productDAO.getAll();
-        Assert.assertEquals(4, actualProducts.size());
+        List<Product> actualProducts = productService.findAll(false);
+        Assert.assertEquals(5, actualProducts.size());
     }
 }

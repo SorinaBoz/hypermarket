@@ -2,13 +2,14 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-import ro.sda.hypermarket.core.dao.DepartmentDAO;
-import ro.sda.hypermarket.core.dao.EmployeeDao;
 import ro.sda.hypermarket.core.entity.Department;
 import ro.sda.hypermarket.core.entity.Employee;
+import ro.sda.hypermarket.core.service.DepartmentService;
+import ro.sda.hypermarket.core.service.EmployeeService;
 
 import java.util.List;
 
@@ -17,92 +18,76 @@ import java.util.List;
 @Transactional
 public class DepartmentDaoTest {
 
+    @Autowired
+    private DepartmentService departmentService;
 
     @Autowired
-    private DepartmentDAO departmentDAO;
-
-    @Autowired
-    private EmployeeDao employeeDao;
+    private EmployeeService employeeService;
 
     @Test
+    @Rollback(false)
+    @Transactional
     public void createDepartmentTest() {
 
         Department department = new Department();
         Employee employee = new Employee();
-        department.setName("Advertising");
-        department.setManager(employeeDao.getEmployeeById(32L));
-        departmentDAO.createDepartment(department);
+        department.setName("Management");
+        department.setManager(employeeService.getEmployeeById(32L, false));
+        departmentService.create(department, false);
 
         employee.setName("Maria Ionescu");
         employee.setCity("Cluj");
         employee.setSalary(45D);
         employee.setJobTitle("Saler");
-        employeeDao.createEmployee(employee);
-
-        Department actualDepartment = departmentDAO.getDepartmentByName("Advertising");
-        Department expectedDepartment = department;
-        Assert.assertEquals(expectedDepartment, actualDepartment);
-    }
-
-    @Test
-    public void getDepartmentByIdTest() {
-        Department expectedDepartment = departmentDAO.getDepartmentById(24L);
-        List<Department> departments = departmentDAO.getAll();
-        Assert.assertEquals(expectedDepartment, departments.get(0));
-    }
-
-    @Test
-    public void getDepartmentByNameTest(){
-        Department actualDepartment = departmentDAO.getDepartmentById(33L);
-        Department expectedDepartment = departmentDAO.getDepartmentByName("Sales");
-        Assert.assertEquals(expectedDepartment, actualDepartment);
+        employeeService.create(employee, false);
+        Assert.assertNotNull(department);
     }
 
     @Test
     public void updateDepartmentTest(){
 
-        Department department = departmentDAO.getDepartmentById(26L);
+        Department department = departmentService.getDepartmentById(38L, false);
         department.setName("Purchases");
-        department.setManager(employeeDao.getEmployeeById(32L));
-        departmentDAO.updateDepartment(department);
+        department.setManager(employeeService.getEmployeeById(32L, false));
+        departmentService.update(department, false);
+    }
 
-        Department actualDepartment = departmentDAO.getDepartmentByName("Purchases");
-        Department expectedDepartment = department;
+    @Test
+    @Rollback(false)
+    @Transactional
+    public void getDepartmentByIdTest() {
+        Department expectedDepartment = departmentService.getDepartmentById(24L, false);
+        List<Department> departments = departmentService.findAll(false);
+        Assert.assertEquals(expectedDepartment, departments.get(0));
+    }
+
+    @Test
+    @Rollback(false)
+    @Transactional
+    public void getDepartmentByNameTest(){
+        Department actualDepartment = departmentService.getDepartmentById(42L, false);
+        Department expectedDepartment = departmentService.getDepartmentByName("Publicity", false);
         Assert.assertEquals(expectedDepartment, actualDepartment);
     }
 
-//    @Test
-//    public void deleteDepartmentTest(){
-//        Department department = departmentDAO.getDepartmentById(4L);
-//        departmentDAO.deleteDepartment(department);
-//        List<Department> departments = departmentDAO.getAll();
-//        Assert.assertTrue(departments.isEmpty());
-//    }
-
     @Test
-    public void deleteDepartmentTest1(){
-        List<Department> departments = departmentDAO.getAll();
+    @Rollback(false)
+    @Transactional
+    public void deleteDepartmentTest(){
+        List<Department> departments = departmentService.findAll(false);
         int size = departments.size();
-        Department department = departmentDAO.getDepartmentById(27L);
-        departmentDAO.deleteDepartment(department);
-        departments = departmentDAO.getAll();
+        Department department = departmentService.getDepartmentById(28L, false);
+        departmentService.delete(department, false);
+        departments = departmentService.findAll(false);
         Assert.assertEquals(size - 1, departments.size());
     }
 
     @Test
+    @Rollback(false)
+    @Transactional
     public void getAllDepartmentsTest() {
 
-//        Department department = new Department();
-//        department.setName("Marketing");
-//        department.setManager(employeeDao.getEmployeeById(32L));
-//        departmentDAO.createDepartment(department);
-//
-//        Department department1 = new Department();
-//        department1.setName("Accounting");
-//        department1.setManager(employeeDao.getEmployeeById(32L));
-//        departmentDAO.createDepartment(department1);
-
-        List<Department> actualDepartments = departmentDAO.getAll();
-        Assert.assertEquals(13, actualDepartments.size());
+        List<Department> actualDepartments = departmentService.findAll(false);
+        Assert.assertEquals(16, actualDepartments.size());
     }
 }

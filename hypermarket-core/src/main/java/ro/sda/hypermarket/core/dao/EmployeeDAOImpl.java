@@ -56,7 +56,6 @@ public class EmployeeDAOImpl implements EmployeeDao{
         session.close();
 
         return employees;
-
     }
 
     @Override
@@ -67,7 +66,6 @@ public class EmployeeDAOImpl implements EmployeeDao{
         sessionFactory.getCurrentSession().flush();
         tr.commit();
         return employee;
-
     }
 
     @Override

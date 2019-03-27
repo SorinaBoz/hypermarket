@@ -3,6 +3,7 @@ package ro.sda.hypermarket.core.dao;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ro.sda.hypermarket.core.entity.Supplier;
@@ -24,10 +25,10 @@ public class SupplierDAOImpl implements SupplierDAO {
 
     @Override
     public Supplier createSupplier(Supplier supplier) {
-//        sessionFactory.getCurrentSession().beginTransaction();
+        sessionFactory.getCurrentSession().beginTransaction();
         getCurrentSession().save(supplier);
-//        sessionFactory.getCurrentSession().flush();
-//        sessionFactory.getCurrentSession().getTransaction().commit();
+        sessionFactory.getCurrentSession().flush();
+        sessionFactory.getCurrentSession().getTransaction().commit();
         return supplier;
     }
 
@@ -35,6 +36,15 @@ public class SupplierDAOImpl implements SupplierDAO {
     public Supplier getSupplierById(Long id) {
         return getCurrentSession().load(Supplier.class, id);
 
+    }
+
+    @Override
+    public Supplier getSupplierByName(String name) {
+        Query query = sessionFactory.getCurrentSession().
+                createQuery("FROM Supplier WHERE name=:name");
+        query.setParameter("name", name);
+        Supplier supplier = (Supplier) query.uniqueResult();
+        return supplier;
     }
 
     @Override

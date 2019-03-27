@@ -1,14 +1,15 @@
 package ro.sda.hypermarket.core.entity;
 
-import javax.persistence.*;
+import ro.sda.hypermarket.core.base.BaseEntity;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.Objects;
 
 @Entity
 @Table(name = "suppliers", schema = "hypermarket")
-public class Supplier {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Supplier extends BaseEntity {
 
     @Column(name = "name", length = 50, nullable = false)
     private String name;
@@ -18,14 +19,6 @@ public class Supplier {
 
     @Column(name = "city", length = 40, nullable = false)
     private String city;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -56,21 +49,22 @@ public class Supplier {
         if (this == o) return true;
         if (!(o instanceof Supplier)) return false;
         Supplier supplier = (Supplier) o;
-        return Objects.equals(getId(), supplier.getId()) &&
-                Objects.equals(getName(), supplier.getName()) &&
-                Objects.equals(getContactNo(), supplier.getContactNo()) &&
-                Objects.equals(getCity(), supplier.getCity());
+        return
+                super.getId() == supplier.getId() &&
+                getName().equals(supplier.getName()) &&
+                getContactNo().equals(supplier.getContactNo()) &&
+                getCity().equals(supplier.getCity());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getContactNo(), getCity());
+        return Objects.hash(getName(), getContactNo(), getCity(), getId());
     }
 
     @Override
     public String toString() {
         return "Supplier{" +
-                "id=" + id +
+                "id=" + getId() +
                 ", name='" + name + '\'' +
                 ", contactNo='" + contactNo + '\'' +
                 ", city='" + city + '\'' +

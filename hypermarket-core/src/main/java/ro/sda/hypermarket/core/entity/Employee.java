@@ -1,14 +1,12 @@
 package ro.sda.hypermarket.core.entity;
+import ro.sda.hypermarket.core.base.BaseEntity;
+
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 @Table(name = "employees", schema = "hypermarket")
-public class Employee {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Employee extends BaseEntity {
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -29,14 +27,6 @@ public class Employee {
     @ManyToOne
     @JoinColumn(name = "manager_id")
     private Employee manager;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -91,7 +81,7 @@ public class Employee {
         if (this == o) return true;
         if (!(o instanceof Employee)) return false;
         Employee employee = (Employee) o;
-        return getId().equals(employee.getId()) &&
+        return super.getId()==(employee.getId()) &&
                 getName().equals(employee.getName()) &&
                 getSalary().equals(employee.getSalary()) &&
                 getJobTitle().equals(employee.getJobTitle()) &&
@@ -107,7 +97,7 @@ public class Employee {
     @Override
     public String toString() {
         return "Employee{" +
-                "id=" + id +
+                "id=" + getId() +
                 ", name='" + name + '\'' +
                 ", salary=" + salary +
                 ", jobTitle='" + jobTitle + '\'' +

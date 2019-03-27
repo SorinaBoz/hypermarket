@@ -10,6 +10,8 @@ public interface SupplierDAO {
 
     Supplier getSupplierById(Long id);
 
+    Supplier getSupplierByName(String name);
+
     List<Supplier> getAll();
 
     Supplier updateSupplier (Supplier supplier);

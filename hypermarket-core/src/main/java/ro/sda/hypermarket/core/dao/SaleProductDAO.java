@@ -7,8 +7,14 @@ import java.util.List;
 public interface SaleProductDAO {
 
     SaleProduct createSaleProduct(SaleProduct saleProduct);
+
     SaleProduct getSaleProductById(Long id);
+
+    SaleProduct getSaleProductByName(String name);
+
     List<SaleProduct> getAll();
+
     SaleProduct updateSaleProduct (SaleProduct saleProduct);
+
     void deleteSaleProduct(SaleProduct saleProduct);
 }

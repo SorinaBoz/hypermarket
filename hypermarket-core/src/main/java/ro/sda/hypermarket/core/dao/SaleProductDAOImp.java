@@ -3,6 +3,7 @@ package ro.sda.hypermarket.core.dao;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import ro.sda.hypermarket.core.entity.SaleProduct;
 
@@ -26,6 +27,15 @@ public class SaleProductDAOImp implements SaleProductDAO {
     @Override
     public SaleProduct getSaleProductById(Long id) {
         return getCurrentSession().load(SaleProduct.class, id);
+    }
+
+    @Override
+    public SaleProduct getSaleProductByName(String name) {
+        Query query = sessionFactory.getCurrentSession().
+                createQuery("FROM SaleProduct WHERE name=:name");
+        query.setParameter("name", name);
+        SaleProduct saleProduct = (SaleProduct) query.uniqueResult();
+        return saleProduct;
     }
 
     @Override

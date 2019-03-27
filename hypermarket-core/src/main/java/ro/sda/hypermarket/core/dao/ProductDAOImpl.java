@@ -46,7 +46,6 @@ public class ProductDAOImpl implements ProductDAO {
         return product;
     }
 
-
     @Override
     public List<Product> getAll() {
         Session session = sessionFactory.openSession();

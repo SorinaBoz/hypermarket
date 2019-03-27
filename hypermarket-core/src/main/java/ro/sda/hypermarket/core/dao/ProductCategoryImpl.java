@@ -23,15 +23,6 @@ public class ProductCategoryImpl implements ProductCategoryDAO{
         return sessionFactory.getCurrentSession();
     }
 
-//    @Override
-//    public ProductCategory createProductCategory(Long id, ProductCategory productCategory) {
-//       Employee employee = getCurrentSession().load(Employee.class, id);
-//       productCategory.setManager(employee);
-//        getCurrentSession().save(productCategory);
-//        return productCategory;
-//
-//    }
-
     @Override
     public ProductCategory createProductCategory(ProductCategory productCategory) {
         sessionFactory.getCurrentSession().beginTransaction();

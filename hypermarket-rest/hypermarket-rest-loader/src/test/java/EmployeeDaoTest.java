@@ -2,13 +2,14 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-import ro.sda.hypermarket.core.dao.DepartmentDAO;
-import ro.sda.hypermarket.core.dao.EmployeeDao;
 import ro.sda.hypermarket.core.entity.Department;
 import ro.sda.hypermarket.core.entity.Employee;
+import ro.sda.hypermarket.core.service.DepartmentService;
+import ro.sda.hypermarket.core.service.EmployeeService;
 
 import java.util.List;
 
@@ -18,114 +19,82 @@ import java.util.List;
 public class EmployeeDaoTest {
 
     @Autowired
-    private EmployeeDao employeeDao;
+    private EmployeeService employeeService;
 
     @Autowired
-    private DepartmentDAO departmentDAO;
+    private DepartmentService departmentService;
 
     @Test
+    @Rollback(false)
+    @Transactional
     public void createEmployeeTest(){
         Employee employee = new Employee();
         Department department = new Department();
         department.setName("Sales");
-        departmentDAO.createDepartment(department);
+        departmentService.create(department, false);
         employee.setName("Roxana Preda");
         employee.setSalary(5200D);
         employee.setJobTitle("Consultant");
         employee.setCity("Botosani");
         employee.setDepartment(department);
-        employee.setManager(employeeDao.getEmployeeById(32L));
-        employeeDao.createEmployee(employee);
-        Employee actualEmployee = employeeDao.getEmployeeByName("Roxana Preda");
-        Employee expectedEmployee = employee;
-//        Department actualFromDB = employeeDao.getEmployeeById().getDepartment();
-//        Department expected = employee.getDepartment();
-        Assert.assertEquals(expectedEmployee, actualEmployee);
-//        Assert.assertEquals(expected, actualFromDB);
+        employee.setManager(employeeService.getEmployeeById(32L, false));
+        employeeService.create(employee, false);
+        Assert.assertNotNull(employee);
     }
 
     @Test
+    @Rollback(false)
+    @Transactional
     public void updateEmployeeTest() {
-        Employee employee = employeeDao.getEmployeeById(33L);
-        employee.setName("Roxana Preda");
+        Employee employee = employeeService.getEmployeeById(36L, false);
+        employee.setName("Adriadna Lungu");
         employee.setSalary(240D);
-        employee.setJobTitle("Consultant");
+        employee.setJobTitle("Manager");
         employee.setCity("Iasi");
-        employee.setManager(employeeDao.getEmployeeById(32L));
-        employeeDao.updateEmployee(employee);
+        employee.setManager(employeeService.getEmployeeById(32L, false));
+        employeeService.update(employee, false);
         Department department = new Department();
         employee.setDepartment(department);
         department.setName("Sales");
-        departmentDAO.createDepartment(department);
-
-        Employee actualEmployee = employeeDao.getEmployeeByName("Roxana Preda");
-        Employee expectedEmployee = employee;
-        Assert.assertEquals(expectedEmployee, actualEmployee);
+        departmentService.create(department, false);
     }
 
     @Test
+    @Rollback(false)
+    @Transactional
     public void getEmployeeByIdTest(){
-        Employee expectedEmployee = employeeDao.getEmployeeById(32L);
-        List<Employee> employees = employeeDao.getAll();
+        Employee expectedEmployee = employeeService.getEmployeeById(32L, false);
+        List<Employee> employees = employeeService.findAll(false);
         Assert.assertEquals(expectedEmployee, employees.get(0));
     }
 
     @Test
+    @Rollback(false)
+    @Transactional
     public void getEmployeeByNameTest(){
-        Employee actualEmployee = employeeDao.getEmployeeById(32L);
-        Employee expectedEmployee = employeeDao.getEmployeeByName("Sorina Boz");
+        Employee actualEmployee = employeeService.getEmployeeById(36L, false);
+        Employee expectedEmployee = employeeService.getEmployeeByName("Adriadna Lungu", false);
         Assert.assertEquals(expectedEmployee, actualEmployee);
     }
 
-//    @Test
-//    public void deleteEmployeeTest(){
-//        Employee employee = employeeDao.getEmployeeById(28L);
-//        employeeDao.deleteEmployee(employee);
-//        List<Employee> employees = employeeDao.getAll();
-//        Assert.assertTrue (employees.isEmpty());
-//    }
-
     @Test
-    public void deleteEmployeeTest1(){
-        List<Employee> employees = employeeDao.getAll();
+    @Rollback(false)
+    @Transactional
+    public void deleteEmployeeTest(){
+        List<Employee> employees = employeeService.findAll(false);
         int size = employees.size();
-        Employee employee = employeeDao.getEmployeeById(29L);
-        employeeDao.deleteEmployee(employee);
-        employees = employeeDao.getAll();
+        Employee employee = employeeService.getEmployeeById(37L, false);
+        employeeService.delete(employee, false);
+        employees = employeeService.findAll(false);
         Assert.assertEquals(size - 1, employees.size());
     }
 
     @Test
+    @Rollback(false)
+    @Transactional
     public void getAllEmployeesTest(){
-
-        Employee employee = new Employee();
-        employee.setName("Cristiana Turcanu");
-        employee.setSalary(3200D);
-        employee.setJobTitle("Cashier");
-        employee.setCity("Cluj");
-        employee.setManager(employeeDao.getEmployeeById(32L));
-        employeeDao.createEmployee(employee);
-
-        Department department = new Department();
-        employee.setDepartment(department);
-        department.setName("Marketing");
-        departmentDAO.createDepartment(department);
-
-        Employee employee1 = new Employee();
-        employee1.setName("Lili Andronescu");
-        employee1.setSalary(2100D);
-        employee1.setJobTitle("Cashier");
-        employee1.setCity("Oradea");
-        employee1.setManager(employeeDao.getEmployeeById(32L));
-        employeeDao.createEmployee(employee1);
-
-        Department department1 = new Department();
-        employee1.setDepartment(department1);
-        department1.setName("Marketing");
-        departmentDAO.createDepartment(department1);
-
-        List<Employee> actualEmployees = employeeDao.getAll();
-        Assert.assertEquals(4, actualEmployees.size());
+        List<Employee> actualEmployees = employeeService.findAll(false);
+        Assert.assertEquals(6, actualEmployees.size());
 
     }
 }

@@ -2,11 +2,12 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-import ro.sda.hypermarket.core.dao.ClientDAO;
 import ro.sda.hypermarket.core.entity.Client;
+import ro.sda.hypermarket.core.service.ClientService;
 
 import java.util.List;
 
@@ -16,74 +17,78 @@ import java.util.List;
 public class ClientDaoTest {
 
     @Autowired
-    private ClientDAO clientDAO;
+    private ClientService clientService;
 
     @Test
+    @Rollback(false)
+    @Transactional
     public void createClientTest() {
 
         Client client = new Client();
-        client.setName("Irina Mihai");
-        clientDAO.createClient(client);
-        Client actualClient = clientDAO.getClientByName("Irina Mihai");
-        Client expectedClient = client;
-        Assert.assertEquals(expectedClient, actualClient);
+        client.setName("Argentina Mihai");
+        clientService.create(client, false);
+        Assert.assertNotNull(client);
     }
 
     @Test
+    @Rollback(false)
+    @Transactional
     public void getClientByIdTest() {
-        Client expectedClient = clientDAO.getClientById(71L);
-        List<Client> clients = clientDAO.getAll();
+        Client expectedClient = clientService.getClientById(71L,false);
+        List<Client> clients = clientService.findAll(false);
         Assert.assertEquals(expectedClient, clients.get(0));
     }
 
     @Test
+    @Rollback(false)
+    @Transactional
     public void getClientByNameTest(){
-        Client actualClient = clientDAO.getClientById(71L);
-        Client expectedClient = clientDAO.getClientByName("Madalina Georgiana");
+        Client actualClient = clientService.getClientById(72L, false);
+        Client expectedClient = clientService.getClientByName("Lucretia Micu", false);
         Assert.assertEquals(expectedClient, actualClient);
     }
 
     @Test
+    @Rollback(false)
+    @Transactional
     public void updateClientTest(){
 
-        Client client = clientDAO.getClientById(72L);
-        client.setName("Lucretia Micu");
-        clientDAO.updateClient(client);
-        Client actualClient = clientDAO.getClientByName("Lucretia Micu");
-        Client expectedClient = client;
-        Assert.assertEquals(expectedClient, actualClient);
+        Client client = clientService.getClientById(74L, false);
+        client.setName("Maria Ioana");
+        clientService.update(client, false);
+//        Client actualClient = clientService.getClientByName("Maria Ioana", false);
+//        Client expectedClient = client;
+//        Assert.assertEquals(expectedClient, actualClient);
     }
 
 //    @Test
+//    @Rollback(false)
+//    @Transactional
 //    public void deleteClientTest(){
-//        Client client = clientDAO.getClientById(67L);
-//        clientDAO.deleteClient(client);
-//        List<Client> clients = clientDAO.getAll();
+//        Client client = clientService.getClientById(67L, false);
+//        clientService.delete(client, false);
+//        List<Client> clients = clientService.findAll(false);
 //        Assert.assertTrue(clients.isEmpty());
 //    }
 
     @Test
-    public void deleteClientTest1(){
-        List<Client> clients = clientDAO.getAll();
+    @Rollback(false)
+    @Transactional
+    public void deleteClientTest(){
+        List<Client> clients = clientService.findAll(false);
         int size = clients.size();
-        Client client = clientDAO.getClientById(75L);
-        clientDAO.deleteClient(client);
-        clients = clientDAO.getAll();
+        Client client = clientService.getClientById(78L, false);
+        clientService.delete(client, false);
+        clients = clientService.findAll(false);
         Assert.assertEquals(size - 1, clients.size());
     }
 
     @Test
+    @Rollback(false)
+    @Transactional
     public void getAllClientsTest() {
 
-        Client client = new Client();
-        client.setName("Madalina Georgiana");
-        clientDAO.createClient(client);
-
-        Client client1 = new Client();
-        client1.setName("Mardare Cristina");
-        clientDAO.createClient(client1);
-
-        List<Client> actualClients = clientDAO.getAll();
+        List<Client> actualClients = clientService.findAll(false);
         Assert.assertEquals(8, actualClients.size());
     }
 }

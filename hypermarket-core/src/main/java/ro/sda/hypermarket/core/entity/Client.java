@@ -1,25 +1,18 @@
 package ro.sda.hypermarket.core.entity;
 
-import javax.persistence.*;
+import ro.sda.hypermarket.core.base.BaseEntity;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.Objects;
 
 @Entity
 @Table (name = "clients", schema = "hypermarket")
-public class Client {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Client extends BaseEntity {
 
     @Column(name = "name", length = 50)
     private String name;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -34,7 +27,7 @@ public class Client {
         if (this == o) return true;
         if (!(o instanceof Client)) return false;
         Client client = (Client) o;
-        return getId().equals(client.getId()) &&
+        return super.getId() == client.getId() &&
                 Objects.equals(getName(), client.getName());
     }
 
@@ -46,7 +39,7 @@ public class Client {
     @Override
     public String toString() {
         return "Client{" +
-                "id=" + id +
+                "id=" + getId() +
                 ", name='" + name + '\'' +
                 '}';
     }
